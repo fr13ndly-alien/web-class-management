@@ -12,13 +12,17 @@ import {
   Typography
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { signedIn } from 'utils/storage/authStatusSlice';
+import { setAuth } from 'utils/storage/authInfoSlice';
 
 import { Facebook as FacebookIcon, Google as GoogleIcon } from 'icons';
 
 const schema = {
   email: {
     presence: { allowEmpty: false, message: 'is required' },
-    email: true,
+    email: false,
     length: {
       maximum: 64
     }
@@ -127,15 +131,16 @@ const useStyles = makeStyles(theme => ({
 
 const SignIn = props => {
   const { history } = props;
-
   const classes = useStyles();
-
   const [formState, setFormState] = useState({
     isValid: false,
     values: {},
     touched: {},
     errors: {}
   });
+
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector( (state) => state.authStatus.value);
 
   useEffect(() => {
     const errors = validate(formState.values, schema);
@@ -172,6 +177,21 @@ const SignIn = props => {
 
   const handleSignIn = event => {
     event.preventDefault();
+
+    axios.post('http://localhost:8080/user/login', {
+      email: formState.values.email, password: formState.values.password
+    })
+    .then ( res => {
+      let user = res.data;
+      if (user) {
+        dispatch(signedIn());
+        dispatch(setAuth(user.id));
+
+        console.log('>> Is logged in: ', isLoggedIn);
+        history.push('/dashboard');
+      }
+    })
+
     history.push('/');
   };
 
@@ -232,23 +252,14 @@ const SignIn = props => {
                 className={classes.form}
                 onSubmit={handleSignIn}
               >
-                <Typography
-                  className={classes.title}
-                  variant="h2"
-                >
+                <Typography className={classes.title} variant="h2">
                   Sign in
                 </Typography>
-                <Typography
-                  color="textSecondary"
-                  gutterBottom
-                >
+                <Typography color="textSecondary" gutterBottom>
                   Sign in with social media
                 </Typography>
                 <Grid
-                  className={classes.socialButtons}
-                  container
-                  spacing={2}
-                >
+                  className={classes.socialButtons} container spacing={2}>
                   <Grid item>
                     <Button
                       color="primary"
