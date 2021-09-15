@@ -7,9 +7,11 @@ export const authStatusSlice = createSlice({
   },
   reducers: {
     signedIn: state => {
+      console.log('Signed in!');
       state.value = true
     },
     signedOut: state => {
+      console.log('Signed out, good bye!')
       state.value = false
     }
   },

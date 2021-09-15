@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
@@ -7,6 +7,10 @@ import { AppBar, Toolbar, Badge, Hidden, IconButton } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { signedOut } from 'utils/storage/authStatusSlice';
+import { clearAuth } from 'utils/storage/authInfoSlice';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,8 +28,19 @@ const Topbar = props => {
   const { className, onSidebarOpen, ...rest } = props;
 
   const classes = useStyles();
+  const history = useHistory();
 
   const [notifications] = useState([]);
+
+  const dispatch = useDispatch();
+
+  const handleSignOut = () => {
+    dispatch(signedOut);
+    dispatch(clearAuth);
+
+    console.log('> History: ', history);
+    history.push('/');
+  }
 
   return (
     <AppBar
@@ -53,6 +68,7 @@ const Topbar = props => {
           <IconButton
             className={classes.signOutButton}
             color="inherit"
+            onClick={handleSignOut}
           >
             <InputIcon />
           </IconButton>
