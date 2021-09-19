@@ -34,11 +34,11 @@ const Main = props => {
   });
 
   const history = useHistory();
-  const isLoggedIn = useSelector( (state) => state.authStatus.value);
 
   useEffect( () => {
-    if (!isLoggedIn) {
-      console.log('Please login!', isLoggedIn);
+    const isAuth = localStorage.getItem('isAuth') || false;
+    if (!isAuth) {
+      console.log('Please login!', isAuth);
       history.push('/sign-in')
     } else console.log('Logged in, welcome back!');
   })
