@@ -22,6 +22,8 @@ import {
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
 import mockData from './data';
+import axios from 'axios';
+import { useEffect } from 'react';
 import { StatusBullet } from 'components';
 
 const useStyles = makeStyles(theme => ({
@@ -55,7 +57,25 @@ const LatestOrders = props => {
 
   const classes = useStyles();
 
-  const [orders] = useState(mockData);
+  const [ groups, setGroups ] = useState([{}]);
+  const [ performFetching, setPerformFetching ] = useState(true);
+  
+  useEffect( () => {
+    if (performFetching) {
+      getTeachingGroup();
+      setPerformFetching(false);
+    }
+  })
+
+  const getTeachingGroup = () => {
+    const currentUser = localStorage.getItem('auth')
+    axios.get(`http://localhost:8080/group/${currentUser}`)
+      .then( response => {
+        const groups = response.data;
+        console.log('>> Data: ', groups)
+        setGroups(groups);
+      })
+  }
 
   return (
     <Card
@@ -69,7 +89,7 @@ const LatestOrders = props => {
             size="small"
             variant="outlined"
           >
-            New entry
+            New Group
           </Button>
         }
         title="Latest Orders"
@@ -81,8 +101,8 @@ const LatestOrders = props => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Order Ref</TableCell>
-                  <TableCell>Customer</TableCell>
+                  <TableCell>Group Id</TableCell>
+                  <TableCell>Subject</TableCell>
                   <TableCell sortDirection="desc">
                     <Tooltip
                       enterDelay={300}
@@ -100,24 +120,24 @@ const LatestOrders = props => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {orders.map(order => (
+                {groups.map( group => (
                   <TableRow
                     hover
-                    key={order.id}
+                    key={group.id}
                   >
-                    <TableCell>{order.ref}</TableCell>
-                    <TableCell>{order.customer.name}</TableCell>
+                    <TableCell>{group.ref}</TableCell>
+                    <TableCell>{group.name}</TableCell>
                     <TableCell>
-                      {moment(order.createdAt).format('DD/MM/YYYY')}
+                      {moment(group.createdAt).format('DD/MM/YYYY')}
                     </TableCell>
                     <TableCell>
                       <div className={classes.statusContainer}>
                         <StatusBullet
                           className={classes.status}
-                          color={statusColors[order.status]}
+                          color={statusColors[group.status]}
                           size="sm"
                         />
-                        {order.status}
+                        {group.status}
                       </div>
                     </TableCell>
                   </TableRow>

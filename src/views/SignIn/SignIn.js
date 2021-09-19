@@ -188,7 +188,8 @@ const SignIn = props => {
         dispatch(setAuth(user.id));
 
         // redux will reset all state after refresh, use the same technique as "remember me" feature.
-        localStorage.setItem('isAuth', true)
+        localStorage.setItem('isAuth', true);
+        localStorage.setItem('auth', user.id);
 
         console.log('>> Is logged in: ', isLoggedIn);
         history.push('/dashboard');
