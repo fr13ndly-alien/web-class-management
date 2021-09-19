@@ -3,6 +3,7 @@ import { Link as RouterLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
 import { makeStyles } from '@material-ui/styles';
+import axios from 'axios';
 import {
   Grid,
   Button,
@@ -187,6 +188,22 @@ const SignUp = props => {
 
   const handleSignUp = event => {
     event.preventDefault();
+
+    const name = formState.values.firstName + formState.values.lastName
+    axios.post('http://localhost:8080/user/', {
+      name: name, 
+      email: formState.values.email,
+      password: formState.values.password,
+      role: 'student'
+    })
+    .then ( res => {
+      let user = res.data;
+      if (user) {
+        console.log('>> Created: ', user);
+        alert("User created!")
+      }
+    })
+
     history.push('/');
   };
 
@@ -243,20 +260,11 @@ const SignUp = props => {
               </IconButton>
             </div>
             <div className={classes.contentBody}>
-              <form
-                className={classes.form}
-                onSubmit={handleSignUp}
-              >
-                <Typography
-                  className={classes.title}
-                  variant="h2"
-                >
+              <form className={classes.form} onSubmit={handleSignUp}>
+                <Typography className={classes.title} variant="h2">
                   Create new account
                 </Typography>
-                <Typography
-                  color="textSecondary"
-                  gutterBottom
-                >
+                <Typography color="textSecondary" gutterBottom>
                   Use your email to create new account
                 </Typography>
                 <TextField

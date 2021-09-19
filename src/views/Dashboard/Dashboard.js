@@ -12,7 +12,6 @@ import {
   TotalProfit,
   LatestSales,
   UsersByDevice,
-  LatestProducts,
   LatestOrders
 } from './components';
 
@@ -24,15 +23,6 @@ const useStyles = makeStyles(theme => ({
 
 const Dashboard = () => {
   const classes = useStyles();
-  const history = useHistory();
-  const isLoggedIn = useSelector( (state) => state.authStatus.value);
-
-  useEffect( () => {
-    if (!isLoggedIn) {
-      console.log('Please login!', isLoggedIn);
-      history.push('/sign-in')
-    } else console.log('Logged in, welcome back!');
-  })
 
   return (
     <div className={classes.root}>

@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/styles';
 import { useMediaQuery } from '@material-ui/core';
 
 import { Sidebar, Topbar, Footer } from './components';
+import { useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -30,6 +32,16 @@ const Main = props => {
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'), {
     defaultMatches: true
   });
+
+  const history = useHistory();
+  const isLoggedIn = useSelector( (state) => state.authStatus.value);
+
+  useEffect( () => {
+    if (!isLoggedIn) {
+      console.log('Please login!', isLoggedIn);
+      history.push('/sign-in')
+    } else console.log('Logged in, welcome back!');
+  })
 
   const [openSidebar, setOpenSidebar] = useState(false);
 

@@ -38,7 +38,6 @@ const Topbar = props => {
     dispatch(signedOut);
     dispatch(clearAuth);
 
-    console.log('> History: ', history);
     history.push('/');
   }
 
