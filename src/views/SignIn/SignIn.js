@@ -140,7 +140,6 @@ const SignIn = props => {
   });
 
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector( (state) => state.authStatus.value);
 
   useEffect(() => {
     const errors = validate(formState.values, schema);
@@ -185,13 +184,12 @@ const SignIn = props => {
       let user = res.data;
       if (user) {
         dispatch(signedIn());
-        dispatch(setAuth(user.id));
+        dispatch(setAuth(user._id));
 
         // redux will reset all state after refresh, use the same technique as "remember me" feature.
         localStorage.setItem('isAuth', true);
-        localStorage.setItem('auth', user.id);
+        localStorage.setItem('auth', user._id);
 
-        console.log('>> Is logged in: ', isLoggedIn);
         history.push('/dashboard');
       }
     })
@@ -259,7 +257,7 @@ const SignIn = props => {
                 <Typography className={classes.title} variant="h2">
                   Sign in
                 </Typography>
-                <Typography color="textSecondary" gutterBottom>
+                {/* <Typography color="textSecondary" gutterBottom>
                   Sign in with social media
                 </Typography>
                 <Grid
@@ -286,6 +284,7 @@ const SignIn = props => {
                     </Button>
                   </Grid>
                 </Grid>
+                
                 <Typography
                   align="center"
                   className={classes.sugestion}
@@ -293,7 +292,7 @@ const SignIn = props => {
                   variant="body1"
                 >
                   or login with email address
-                </Typography>
+                </Typography> */}
                 <TextField
                   className={classes.textField}
                   error={hasError('email')}
