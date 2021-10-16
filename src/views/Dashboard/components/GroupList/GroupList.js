@@ -27,7 +27,7 @@ import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { StatusBullet } from 'components';
-import AccountDetails from '../../../Account/components/AccountDetails';
+import GroupCreationForm from '../ClassCreationForm';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -81,12 +81,12 @@ const GroupList = props => {
   
   useEffect( () => {
     if (performFetching) {
-      getTeachingGroup();
+      getTeachingClasses();
       setPerformFetching(false);
     }
   })
 
-  const getTeachingGroup = () => {
+  const getTeachingClasses = () => {
     const currentUser = localStorage.getItem('auth');
     
     axios.get(`http://localhost:8080/group/by-teacher/${currentUser}`)
@@ -122,12 +122,7 @@ const GroupList = props => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
+          <GroupCreationForm />
         </Box>
       </Modal>
 
