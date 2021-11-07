@@ -76,13 +76,13 @@ const GroupList = props => {
   const classes = useStyles();
 
   const [ groups, setGroups ] = useState([{}]);
-  const [ performFetching, setPerformFetching ] = useState(true);
+  const [ loadGroups, reloadGroup ] = useState(true);
   const [ openGroupCreationForm, setOpenGroupCreationForm] = useState(false);
   
   useEffect( () => {
-    if (performFetching) {
+    if (loadGroups) {
       getTeachingClasses();
-      setPerformFetching(false);
+      reloadGroup(false);
     }
   })
 
@@ -99,7 +99,9 @@ const GroupList = props => {
         } 
         else 
           alert('Error getting learning groups');
-      })
+      });
+
+    console.log('> Groups: ', groups);
   }
 
   const handleCloseGroupCreation = () => {
@@ -122,7 +124,7 @@ const GroupList = props => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <GroupCreationForm />
+          <GroupCreationForm handleOpen={setOpenGroupCreationForm}/>
         </Box>
       </Modal>
 

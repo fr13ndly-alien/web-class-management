@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -19,11 +20,12 @@ const useStyles = makeStyles(() => ({
 }));
 
 const ClassCreationForm = props => {
-  const { className, ...rest } = props;
+  const { className, handleOpen, ...rest } = props;
 
   const classes = useStyles();
 
   const [groupInfo, setGroupInfo] = useState({
+    teacher: localStorage.getItem('auth'),
     name: '',
     subject: '',
     price: 0,
@@ -49,6 +51,8 @@ const ClassCreationForm = props => {
   };
 
   const handleSubmit = event => {
+    // event.preventDefault();
+
     // validate schedule:
     let schedule = [firstDay, secondDay];
     setGroupInfo({
@@ -57,6 +61,15 @@ const ClassCreationForm = props => {
     });
 
     console.log('>> Group info: ', groupInfo);
+    axios.post('http://localhost:8080/group/', groupInfo)
+    .then ( res => {
+      let resData = res.data;
+      console.log('>> data: ', resData)
+      if (resData) {
+        // history.push('/dashboard');
+        handleOpen(false);
+      }
+    });
   }
 
   var firstDay = {};
@@ -72,7 +85,7 @@ const ClassCreationForm = props => {
         break;
       case 'firstDayHour':
         firstDay.hh = evenValue;
-        break
+        break;
       case 'firstDayMinute':
         firstDay.mm = evenValue;
         break;
@@ -176,7 +189,7 @@ const ClassCreationForm = props => {
             <Grid item md={6} xs={12} >
               <TextField
                 fullWidth
-                label="Specify subject"
+                label="Subject"
                 margin="dense"
                 name="subject"
                 onChange={handleChange}
@@ -349,6 +362,13 @@ const ClassCreationForm = props => {
             onClick={handleSubmit}
           >
             Save Group
+          </Button>
+
+          <Button
+            color="secondary"
+            onClick={() => handleOpen(false)}
+          >
+            Cancel
           </Button>
         </CardActions>
       </form>
