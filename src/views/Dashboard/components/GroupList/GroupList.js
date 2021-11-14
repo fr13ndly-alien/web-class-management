@@ -101,11 +101,11 @@ const GroupList = props => {
           alert('Error getting learning groups');
       });
 
-    console.log('> Groups: ', groups);
   }
 
   const handleCloseGroupCreation = () => {
     setOpenGroupCreationForm(false);
+    getTeachingClasses();
   };
 
   const handleOpenGroupCreation = () => {
@@ -124,7 +124,7 @@ const GroupList = props => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <GroupCreationForm handleOpen={setOpenGroupCreationForm}/>
+          <GroupCreationForm handleClose={handleCloseGroupCreation}/>
         </Box>
       </Modal>
 

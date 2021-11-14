@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const ClassCreationForm = props => {
-  const { className, handleOpen, ...rest } = props;
+  const { className, handleClose, ...rest } = props;
 
   const classes = useStyles();
 
@@ -60,14 +60,12 @@ const ClassCreationForm = props => {
       [schedule]: schedule
     });
 
-    console.log('>> Group info: ', groupInfo);
     axios.post('http://localhost:8080/group/', groupInfo)
     .then ( res => {
       let resData = res.data;
-      console.log('>> data: ', resData)
       if (resData) {
         // history.push('/dashboard');
-        handleOpen(false);
+        handleClose(false);
       }
     });
   }
@@ -366,7 +364,7 @@ const ClassCreationForm = props => {
 
           <Button
             color="secondary"
-            onClick={() => handleOpen(false)}
+            onClick={() => handleClose(false)}
           >
             Cancel
           </Button>

@@ -9,7 +9,6 @@ import {
   Budget,
   TotalUsers,
   TasksProgress,
-  TotalProfit,
   LatestSales,
   UsersByDevice,
   LatestOrders as TeachingGroups
