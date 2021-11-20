@@ -82,10 +82,16 @@ const Routes = () => {
         path="/sign-in"
       />
       <RouteWithLayout
+        component={SignInView}
+        exact
+        layout={MinimalLayout}
+        path="/sign-in"
+      />
+      <RouteWithLayout
         component={NotFoundView}
         exact
         layout={MinimalLayout}
-        path="/not-found"
+        path="/group/:groupId/edit"
       />
       <Redirect to="/not-found" />
     </Switch>

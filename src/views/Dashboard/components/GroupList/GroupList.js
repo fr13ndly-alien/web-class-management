@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
+import { BrowserRouter as Router, Link } from "react-router-dom";
 import { makeStyles } from '@material-ui/styles';
 import {
   Box,
@@ -170,9 +171,9 @@ const GroupList = props => {
                 {groups.map( group => (
                   <TableRow
                     hover
-                    key={group.id}
+                    key={group._id}
                   >
-                    <TableCell>{group.subject}</TableCell>
+                    <TableCell><Link to={`/group/${group._id}/edit`}>{group.subject}</Link></TableCell>
                     <TableCell>{group.name}</TableCell>
                     <TableCell>
                       {moment(group.createdDate).format('DD/MM/YYYY')}
