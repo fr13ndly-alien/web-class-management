@@ -27,8 +27,8 @@ import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
 import axios from 'axios';
 import { useEffect } from 'react';
-import { StatusBullet } from 'components';
-import GroupCreationForm from '../ClassCreationForm';
+import GroupCreationForm from '../ClassInfoForm/ClassCreationForm';
+import GroupUpdateForm from '../ClassInfoForm/ClassUpdateForm';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -58,6 +58,8 @@ const style = {
   transform: 'translate(-50%, -50%)',
   width: 400,
   bgcolor: 'background.paper',
+  overflow: "hidden",
+  overflowY: 'scroll',
   border: '2px solid #000',
   boxShadow: 24,
   pt: 2,
@@ -78,7 +80,9 @@ const GroupList = props => {
 
   const [ groups, setGroups ] = useState([{}]);
   const [ loadGroups, reloadGroup ] = useState(true);
+  const [ updatingGroup, setUpdatingGroup ] = useState();
   const [ openGroupCreationForm, setOpenGroupCreationForm] = useState(false);
+  const [ openGroupUpdatingForm, setOpenGroupUpdatingForm] = useState(false);
   
   useEffect( () => {
     if (loadGroups) {
@@ -96,10 +100,10 @@ const GroupList = props => {
           const groups = response.data;
           if (groups)
             setGroups(groups);
-          else alert('No learning group found');
+          else alert('No class found');
         } 
         else 
-          alert('Error getting learning groups');
+          alert('Error getting classes');
       });
 
   }
@@ -113,6 +117,17 @@ const GroupList = props => {
     setOpenGroupCreationForm(true);
   };
 
+  function handleOpenGroupEdit(groupInfo) {
+    setUpdatingGroup(groupInfo);
+    console.log(">> Updating group");
+    setOpenGroupUpdatingForm(true);
+  }
+
+  const handleCloseGroupUpdateForm = () => {
+    setOpenGroupUpdatingForm(false);
+    getTeachingClasses();
+  }
+
   return (
     <Card
       {...rest}
@@ -121,11 +136,24 @@ const GroupList = props => {
       <Modal
         open={openGroupCreationForm}
         onClose={handleCloseGroupCreation}
+        style={{ overflow: 'scroll' }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
+        <Box display="flex" flexDirection="column" sx={style}>
           <GroupCreationForm handleClose={handleCloseGroupCreation}/>
+        </Box>
+      </Modal>
+
+      <Modal
+        open={openGroupUpdatingForm}
+        onClose={handleCloseGroupUpdateForm}
+        style={{ overflow: 'scroll' }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box display="flex" flexDirection="column" sx={style}>
+          <GroupUpdateForm handleClose={handleCloseGroupUpdateForm} groupInfo={updatingGroup}/>
         </Box>
       </Modal>
 
@@ -165,28 +193,27 @@ const GroupList = props => {
                     </Tooltip>
                   </TableCell>
                   <TableCell>Price</TableCell>
+                  <TableCell></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {groups.map( group => (
-                  <TableRow
-                    hover
-                    key={group._id}
-                  >
-                    <TableCell><Link to={`/group/${group._id}/edit`}>{group.subject}</Link></TableCell>
+                  <TableRow hover key={group._id}>
+                    <TableCell>{group.subject}</TableCell>
                     <TableCell>{group.name}</TableCell>
                     <TableCell>
                       {moment(group.createdDate).format('DD/MM/YYYY')}
                     </TableCell>
+                    <TableCell>{group.price + ' VND'}</TableCell>
                     <TableCell>
-                      <div className={classes.statusContainer}>
-                        <StatusBullet
-                          className={classes.status}
-                          color={statusColors[group.status]}
-                          size="sm"
-                        />
-                        {group.price + ' VND'}
-                      </div>
+                      <Button 
+                        color="secondary"
+                        size="small"
+                        variant="outlined"
+                        onClick={() => handleOpenGroupEdit(group)}
+                      >
+                        Edit
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}

@@ -142,13 +142,18 @@ const SignIn = props => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const errors = validate(formState.values, schema);
+    const isAuth = localStorage.getItem('isAuth') || false;
+    if (isAuth) {
+      history.push('/dashboard')
+    } else {
+      const errors = validate(formState.values, schema);
 
-    setFormState(formState => ({
-      ...formState,
-      isValid: errors ? false : true,
-      errors: errors || {}
-    }));
+      setFormState(formState => ({
+        ...formState,
+        isValid: errors ? false : true,
+        errors: errors || {}
+      }));
+    }
   }, [formState.values]);
 
   const handleBack = () => {

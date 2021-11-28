@@ -17,7 +17,6 @@ import {
   NotFound as NotFoundView
 } from './views';
 
-
 const Routes = () => {
 
   return (
